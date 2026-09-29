@@ -1,0 +1,7 @@
+bert_fakenews_model/
+bert_fakenews_results/
+modelo_fakenews.pkl
+*.pkl
+__pycache__/
+logs/
+.DS_Store
