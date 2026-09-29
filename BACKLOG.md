@@ -22,9 +22,9 @@ Este documento centraliza as tarefas (tasks) acordadas para a evolução do mode
 
 ## 🟠 Fase 3: Engenharia de Features (Data Prep)
 *Foco: Otimizar como o modelo consome a informação jornalística.*
-- [ ] **Task 3.1:** Desenvolver o script de concatenação inteligente de colunas. Ao invés de usar apenas o texto, vamos unir `[CLS] Titulo [SEP] Subtitulo [SEP] Texto [SEP]`.
-- [ ] **Task 3.2:** Normalizar o dataset (lidar com Nulos em subtítulos, balancear as classes se necessário).
-- [ ] **Task 3.3:** Salvar a nova versão do dataset como `dataset_treino_multifeature_v2.csv`.
+- [x] **Task 3.1:** Desenvolver o script de concatenação inteligente de colunas. Ao invés de usar apenas o texto, vamos unir `[CLS] Titulo [SEP] Subtitulo [SEP] Texto [SEP]`.
+- [x] **Task 3.2:** Normalizar o dataset (lidar com Nulos em subtítulos, balancear as classes se necessário).
+- [x] **Task 3.3:** Salvar a nova versão do dataset como `dataset_treino_multifeature_v2.csv`.
 
 ---
 
