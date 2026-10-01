@@ -5,3 +5,4 @@ modelo_fakenews.pkl
 __pycache__/
 logs/
 .DS_Store
+mlflow.db
