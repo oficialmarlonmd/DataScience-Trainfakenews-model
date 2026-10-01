@@ -34,15 +34,15 @@ print("=" * 60)
 
 # 1. Executar validação do V3
 print("\n📊 [PASSO 1/2] Executando Validação Automática do V3 nas notícias reais...")
-subprocess.run([sys.executable, "src/validar_v3.py"])
+subprocess.run([sys.executable, "src/v3_recalibrado/validar_v3.py"])
 
 # 2. Executar treinamento do V4
 print("\n🚀 [PASSO 2/2] Iniciando Treinamento V4 (Dataset Chunked / Desenviesado)...")
-ret = subprocess.run([sys.executable, "src/train_v4_chunking.py"])
+ret = subprocess.run([sys.executable, "src/v4_chunking/train_v4_chunking.py"])
 
 if ret.returncode == 0:
     print("\n✅ Treinamento V4 concluído com sucesso!")
     print("\n📊 Executando Validação do V4...")
-    subprocess.run([sys.executable, "src/validar_v4.py"])
+    subprocess.run([sys.executable, "src/v4_chunking/validar_v4.py"])
 else:
     print("❌ Ocorreu um erro durante o treinamento do V4.")
