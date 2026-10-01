@@ -33,12 +33,15 @@ Este documento centraliza as tarefas (tasks) acordadas para a evolução do mode
 - [x] **Task 4.1:** Instalar e configurar **MLflow** para rastreamento de experimentos (Feast removido por não ser o mais adequado para features textuais simples).
 - [x] **Task 4.2:** Criar script `train_monte_carlo.py` integrado com MLflow (log de parâmetros, precisão, recall, f1, acurácia).
 - [x] **Task 4.3:** Executar o loop de Monte Carlo Cross-Validation (70/30) N vezes, rastreando cada rodada (run) no MLflow.
+- [x] **Task 4.4:** Investigação forense do modelo V2 e diagnóstico de viés de comprimento (Shortcut Learning).
+- [x] **Task 4.5:** Retreino recalibrado V3 (MAX_LEN=512, Gradient Accumulation).
+- [x] **Task 4.6:** Engenharia de Features V4: Fatiamento (Chunking) das notícias verdadeiras para igualar o tamanho (~50 palavras) e gerar `dataset_treino_chunking_v4.csv` balanceado 1:1.
 
 ---
 
 ## 🟣 Fase 5: MLOps Model Serving e Entrega
 *Foco: Empacotamento de alto nível para consumo via API.*
-- [ ] **Task 5.1:** Escolher o modelo campeão pelo painel do MLflow.
-- [ ] **Task 5.2:** Empacotar o modelo utilizando **BentoML** (ao invés de apenas um Pickle simples) para criar um serviço pronto para produção.
+- [x] **Task 5.1:** Escolher o modelo campeão pelo painel do MLflow.
+- [x] **Task 5.2:** Empacotar o modelo utilizando **BentoML** (ao invés de apenas um Pickle simples) para criar um serviço pronto para produção.
 - [ ] **Task 5.3:** Atualizar o Relatório/Dossiê Técnico com a arquitetura de MLOps.
 - [ ] **Task 5.4:** Commitar e mergear a branch `development` na `master` com a tag `v2.0-mlops-ready`.
