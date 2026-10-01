@@ -28,16 +28,17 @@ Este documento centraliza as tarefas (tasks) acordadas para a evolução do mode
 
 ---
 
-## 🔴 Fase 4: Treinamento Robusto e Validação Estatística
-*Foco: Elevar o rigor matemático do treinamento usando Validação Cruzada.*
-- [ ] **Task 4.1:** Criar script `train_monte_carlo.py` focado em **Monte Carlo Cross-Validation** (Embaralhar e treinar repetidas vezes na proporção 70/30).
-- [ ] **Task 4.2:** Incorporar logging de resultados (salvar as métricas precisão, recall, f1, acurácia de cada rodada em um `.json` automático).
-- [ ] **Task 4.3:** Calcular a Média e o Desvio Padrão das métricas finais para provar que o modelo é inabalável.
+## 🔴 Fase 4: Treinamento Robusto (Monte Carlo + MLOps)
+*Foco: Elevar o rigor matemático e implantar rastreamento profissional de experimentos.*
+- [x] **Task 4.1:** Instalar e configurar **MLflow** para rastreamento de experimentos (Feast removido por não ser o mais adequado para features textuais simples).
+- [x] **Task 4.2:** Criar script `train_monte_carlo.py` integrado com MLflow (log de parâmetros, precisão, recall, f1, acurácia).
+- [x] **Task 4.3:** Executar o loop de Monte Carlo Cross-Validation (70/30) N vezes, rastreando cada rodada (run) no MLflow.
 
 ---
 
-## 🟣 Fase 5: Entrega e Versionamento do Novo Modelo
-- [ ] **Task 5.1:** Escolher o modelo campeão das rodadas de validação cruzada.
-- [ ] **Task 5.2:** Exportar o modelo campeão (pipeline completo via Pickle / Save_Pretrained).
-- [ ] **Task 5.3:** Atualizar o Relatório/Dossiê Técnico com a nova arquitetura e resultados.
-- [ ] **Task 5.4:** Commitar e mergear a branch `development` na `master` com a tag `v2.0-modelo-multifeature`.
+## 🟣 Fase 5: MLOps Model Serving e Entrega
+*Foco: Empacotamento de alto nível para consumo via API.*
+- [ ] **Task 5.1:** Escolher o modelo campeão pelo painel do MLflow.
+- [ ] **Task 5.2:** Empacotar o modelo utilizando **BentoML** (ao invés de apenas um Pickle simples) para criar um serviço pronto para produção.
+- [ ] **Task 5.3:** Atualizar o Relatório/Dossiê Técnico com a arquitetura de MLOps.
+- [ ] **Task 5.4:** Commitar e mergear a branch `development` na `master` com a tag `v2.0-mlops-ready`.
