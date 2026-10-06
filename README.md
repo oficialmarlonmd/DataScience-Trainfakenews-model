@@ -21,6 +21,48 @@ O modelo oficial de produção é a **Versão 4 (V4)**, que superou o viés de t
 
 ---
 
+## 🚀 Como Consumir o Modelo no seu Backend (Hugging Face Hub)
+
+O modelo treinado está publicado e hospedado publicamente no **Hugging Face Hub**:
+🔗 **Repositório Oficial:** [huggingface.co/oficialmarlon/bertimbau-fakenews-detector-v4](https://huggingface.co/oficialmarlon/bertimbau-fakenews-detector-v4)
+
+Qualquer sistema backend em Python (FastAPI, Flask, Django, microsserviço) consome o modelo com apenas poucas linhas, sem necessidade de baixar pesos manualmente:
+
+```python
+from transformers import pipeline
+
+# O transformers baixa o modelo direto do Hugging Face e mantém em memória cache
+classifier = pipeline(
+    "text-classification",
+    model="oficialmarlon/bertimbau-fakenews-detector-v4"
+)
+
+def verificar_noticia(titulo, subtitulo="", texto=""):
+    """
+    Classifica a veracidade da notícia combinando os campos jornalísticos
+    com os tokens de separação [SEP] aprendidos pelo BERTimbau V4.
+    """
+    entrada = f"{titulo} [SEP] {subtitulo} [SEP] {texto}".strip()
+    resultado = classifier(entrada)
+    # Exemplo de saída: {'label': 'FALSA', 'score': 0.9927}
+    return resultado[0]
+
+# Exemplo de Teste:
+noticia = verificar_noticia(
+    titulo="URGENTE: Nova substância milagrosa cura todas as doenças em 24h!",
+    subtitulo="Médicos tentam esconder a receita secreta da população.",
+    texto="Compartilhe imediatamente antes que derrubem este artigo."
+)
+
+print(noticia)
+# Output: {'label': 'FALSA', 'score': 0.9927}
+```
+
+> [!NOTE]
+> Os pesos binários do modelo (~436 MB) são armazenados e cacheados localmente na primeira execução pelo Hugging Face Hub, dispensando versionar arquivos binários pesados no repositório do Git.
+
+---
+
 ## 🔬 Evolução Científica das Versões (`src/`)
 
 Para garantir a rastreabilidade e governança de Machine Learning, o repositório mantém a árvore completa de evolução experimental:
