@@ -26,7 +26,7 @@ mlflow.set_experiment("FakeNews_Bertimbau_V4_Chunking")
 
 # Parâmetros V4
 MODEL_NAME = 'neuralmind/bert-base-portuguese-cased'
-N_ITERATIONS = 3
+N_ITERATIONS = 1      # 1 rodada completa estratificada (treino rápido ~15-20 min)
 EPOCHS = 3
 BATCH_SIZE = 16       # Com MAX_LEN=128 podemos usar batch 16 confortavelmente
 GRAD_ACCUM = 2       # Effective batch size = 32
