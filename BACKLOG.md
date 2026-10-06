@@ -43,5 +43,5 @@ Este documento centraliza as tarefas (tasks) acordadas para a evolução do mode
 *Foco: Empacotamento de alto nível para consumo via API.*
 - [x] **Task 5.1:** Escolher o modelo campeão pelo painel do MLflow.
 - [x] **Task 5.2:** Empacotar o modelo utilizando **BentoML** (ao invés de apenas um Pickle simples) para criar um serviço pronto para produção.
-- [ ] **Task 5.3:** Atualizar o Relatório/Dossiê Técnico com a arquitetura de MLOps.
-- [ ] **Task 5.4:** Commitar e mergear a branch `development` na `master` com a tag `v2.0-mlops-ready`.
+- [x] **Task 5.3:** Atualizar o Relatório/Dossiê Técnico com a arquitetura de MLOps e testes formais.
+- [x] **Task 5.4:** Commitar e mergear a branch `development` na `master` com a tag `v2.0-mlops-ready`.

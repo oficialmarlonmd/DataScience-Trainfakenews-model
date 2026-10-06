@@ -23,12 +23,14 @@ src/
 ├── v3_recalibrado/      # Hipótese de aumento de MAX_LEN=512 (Staging pós-forense)
 │   ├── gerar_validacao_100.py
 │   ├── train_v3_recalibrado.py
-│   └── validar_v3.py
+│   ├── validar_v3.py
+│   └── export_bentoml_v3.py
 │
-├── v4_chunking/         # Fatiamento das notícias longas (Desenviesamento 1:1)
+├── v4_chunking/         # Modelo Campeão: Fatiamento das notícias longas (Desenviesamento 1:1)
 │   ├── preparar_dataset_chunking_v4.py
 │   ├── train_v4_chunking.py
-│   └── validar_v4.py
+│   ├── validar_v4.py
+│   └── export_bentoml_v4.py
 │
 └── pipeline/            # Orquestração e automação de experimentos
     ├── monitorar_v3_e_executar_v4.py
