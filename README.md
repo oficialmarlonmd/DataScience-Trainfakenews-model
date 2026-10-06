@@ -1,79 +1,103 @@
-# 📰 Fake News Classification Model (Bertimbau)
+# 📰 Fake News Classification Model (BERTimbau)
 
-Este repositório contém todo o pipeline de Machine Learning desenvolvido para a classificação e detecção de Fake News em textos de língua portuguesa, utilizando o modelo **Bertimbau** (BERT adaptado para o português brasileiro).
+Este repositório contém todo o pipeline de Machine Learning e MLOps desenvolvido para a classificação e detecção de Fake News em textos de língua portuguesa, utilizando o modelo **BERTimbau** (`neuralmind/bert-base-portuguese-cased`).
 
-O foco do projeto é construir um fluxo robusto de Data Science e MLOps, abrangendo desde a análise exploratória e preparação de dados até o treinamento com validação rigorosa e a conteinerização do modelo para serving em produção.
+O projeto abrange todo o ciclo de vida de Ciência de Dados: análise exploratória (EDA), engenharia de features jornalísticas, investigação forense de atalhos de aprendizado (*shortcut learning*), retreino com técnica de *chunking* desenviesado e empacotamento com **BentoML**.
 
 ---
 
-## 🚀 Funcionalidades e Pipeline de ML
+## 🏆 Modelo Campeão em Produção (V4 — Chunking)
 
-O desenvolvimento deste modelo seguiu fases rigorosas de Ciência de Dados:
+O modelo oficial de produção é a **Versão 4 (V4)**, que superou o viés de tamanho das notícias através de fatiamento semântico (*chunking* 1:1), atingindo índices de excelência no teste cego com 100 notícias reais (50 Falsas e 50 Verdadeiras):
 
-### 1. Análise Exploratória de Dados (EDA)
-- Análise aprofundada de distribuição do comprimento de tokens nas notícias.
-- Análise de sentimento para capturar extremismos emocionais, com a premissa de que *fake news* possuem forte carga de polaridade.
+| Métrica | Resultado V4 | Status |
+| :--- | :---: | :---: |
+| **Acurácia Global** | **98.00%** (98 / 100) | 🏆 Campeão Absoluto |
+| **Recall em Falsas (Sensibilidade)** | **100.00%** (50 / 50) | 🎯 Zero Notícias Falsas Deixadas Passar |
+| **Precisão em Falsas** | **96.15%** | Alta confiabilidade no alerta |
+| **Precisão em Verdadeiras** | **100.00%** | Todo conteúdo rotulado como real é legítimo |
+| **Recall em Verdadeiras** | **96.00%** (48 / 50) | Apenas 2 falsos positivos conservadores |
+| **Latência por Notícia** | **~14 ms** | Acelerado via Apple Silicon Metal (MPS) |
 
-### 2. Engenharia de Features
-- Concatenação estruturada de atributos jornalísticos utilizando tokens especiais do BERT: `[CLS] Titulo [SEP] Subtitulo [SEP] Texto [SEP]`.
-- Limpeza e balanceamento de classes visando a robustez do modelo em cenários reais.
+---
 
-### 3. Treinamento Robusto e Rastreamento (MLOps)
-- Utilização de **Monte Carlo Cross-Validation** (70/30) para atestar a capacidade de generalização do modelo em múltiplas rodadas.
-- Rastreamento completo de parâmetros, métricas (Precision, Recall, F1-Score, Accuracy) e artefatos de modelo através do **MLflow**.
+## 🔬 Evolução Científica das Versões (`src/`)
 
-### 4. Model Serving & Deployment
-- O modelo campeão é empacotado e preparado para servir inferências (API) através da integração com o framework **BentoML**.
+Para garantir a rastreabilidade e governança de Machine Learning, o repositório mantém a árvore completa de evolução experimental:
+
+- **`src/v1_baseline/`**: Modelo inicial com texto bruto (Baseline 92% no dataset limpo original).
+- **`src/v2_multifeature/`**: Concatenação inteligente de atributos `[CLS] Titulo [SEP] Subtitulo [SEP] Texto`. Diagnosticado com *Shortcut Learning* (acurácia caiu para 41.7% no teste cego porque notícias verdadeiras eram mais longas que as falsas).
+- **`src/v3_recalibrado/`**: Aumento de contexto para `MAX_LEN=512`. Atingiu 84.00% de acurácia, mas demandou 16h+ de treino e recall de 68% em notícias falsas.
+- **`src/v4_chunking/` (Campeão)**: Fatiamento de notícias verdadeiras em blocos médios de 35 palavras, equalizando a distribuição com as notícias falsas (razão de tamanho 0.97x). Treinado em ~25 minutos com `MAX_LEN=128`, alcançando **98.00% de acurácia**.
 
 ---
 
 ## 📂 Estrutura do Repositório
 
-- `src/`: Scripts principais em Python responsáveis pelo core do ML.
-  - `analise_exploratoria.py`: Script de EDA e análise de sentimentos.
-  - `preparar_dataset_final.py` e `preparar_dataset_multifeature.py`: Scripts de processamento, normalização e engenharia de features do texto.
-  - `train_bertimbau.py` e `train_monte_carlo.py`: Rotinas de treinamento do classificador utilizando Bertimbau com integração ao MLflow.
-  - `validar_modelo.py` e `test_predict.py`: Scripts focados em testar o modelo treinado.
-  - `export_bentoml.py`: Preparação e empacotamento do modelo usando BentoML.
-  - `exportar_pickle.py`: Scripts legados de exportação do modelo em formato `.pkl`.
-- `data/`: Diretório destinado ao armazenamento de datasets originais e processados (geralmente ignorados no versionamento se forem muito grandes).
-- `logs/`: Saídas geradas durante o processamento e o treinamento.
-- `mlflow.db`: Banco de dados contendo o registro histórico dos experimentos do MLflow.
-- `notebooks/`: Notebooks Jupyter utilizados para prototipação e testes rápidos.
-- `BACKLOG.md`: Histórico de evolução e controle de atividades das etapas de vida do modelo.
+```text
+fake_news/
+├── data/
+│   └── processed/
+│       ├── dataset_final_treinamento.csv          # Dataset V1
+│       ├── dataset_treino_multifeature_v2.csv      # Dataset V2
+│       ├── dataset_treino_chunking_v4.csv          # Dataset V4 (Chunking)
+│       └── validacao_100_multifeature.csv          # Benchmark Oficial (50 Falsas / 50 Verdadeiras)
+├── src/
+│   ├── v1_baseline/                               # Códigos V1 (Treino, validação e pickle legado)
+│   ├── v2_multifeature/                           # Códigos V2 (EDA, Monte Carlo e forense)
+│   ├── v3_recalibrado/                            # Códigos V3 (MAX_LEN=512, export_bentoml_v3.py)
+│   ├── v4_chunking/                               # Códigos V4 (Chunking, treino e export_bentoml_v4.py)
+│   └── pipeline/                                  # Scripts auxiliares de pipeline e validação final
+├── tests/
+│   └── test_model_v4_accuracy.py                  # Suíte formal de testes unitários automatizados
+├── BACKLOG.md                                     # Controle de fases e governança técnica
+└── README.md                                      # Documentação principal
+```
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
-- **Linguagem**: Python
-- **Modelagem NLP**: HuggingFace Transformers, Bertimbau
-- **MLOps e Tracking**: MLflow
-- **Model Serving**: BentoML
-- **Análise e Manipulação**: Pandas, Scikit-learn, Matplotlib, Seaborn
+## 🧪 Testes Automatizados
+
+A suíte formal de testes unitários valida a acurácia, balanceamento e extinção de viés sobre as 100 notícias de teste:
+
+```bash
+python3 -m unittest tests/test_model_v4_accuracy.py -v
+```
+
+Saída esperada:
+```text
+test_01_integridade_dataset_50_50 ... ok
+test_02_acuracia_50_falsas (50/50 - 100.00%) ... ok
+test_03_acuracia_50_verdadeiras (48/50 - 96.00%) ... ok
+test_04_acuracia_global (98/100 - 98.00%) ... ok
+test_05_desenviesamento_e_calibracao ... ok
+```
 
 ---
 
-## ⚙️ Como Utilizar o Repositório
+## 📦 Model Serving com BentoML
 
-### Instalação de Dependências
-Recomenda-se o uso de um ambiente virtual (ex: `venv` ou `conda`) para instalar as dependências do projeto.
+Todos os modelos estão registrados no BentoML Model Store para consumo por back-ends e APIs:
+
 ```bash
-pip install -r requirements.txt
+python3 -m bentoml models list
 ```
 
-### Visualizando Experimentos no MLflow
-Para conferir o histórico dos treinamentos (Métricas e Hiperparâmetros):
-```bash
-mlflow ui --backend-store-uri sqlite:///mlflow.db
+```text
+Tag                                Module           Size        Creation Time       
+fakenews_bert_v4:afob72gbq26xt6su  bentoml.pytorch  415.63 MiB  2026-10-06 10:01:11 
+fakenews_bert_v3:5vcrv6gbq6deh6su  bentoml.pytorch  415.63 MiB  2026-10-06 10:14:57 
+fakenews_bert_v2:d5mnksf5uwjqd6su  bentoml.pytorch  415.63 MiB  2026-10-01 11:33:51 
 ```
 
-### Inferência Local / Deploy BentoML
-Para subir o servidor do modelo com o BentoML:
+Para re-exportar ou atualizar o modelo V4 no BentoML:
 ```bash
-bentoml serve src.export_bentoml:svc --reload
+python3 src/v4_chunking/export_bentoml_v4.py
 ```
-*(Confirme no código o nome do serviço (svc) que está sendo exportado antes de servir)*.
 
 ---
 
-*Nota: A branch principal deste projeto é a `master`.*
+## 🌿 Governança de Branches
+- **`master`**: Branch oficial de produção contendo a versão estável e o modelo campeão V4 (`v2.0-mlops-ready`).
+- **`development`**: Branch de integração contínua e histórico de desenvolvimento.
+- **`feature/phase*`**: Branches de ciclo de vida das fases 1 a 5.
