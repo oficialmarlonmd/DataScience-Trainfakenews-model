@@ -59,6 +59,7 @@ falsas_corretas = 0
 verdadeiras_corretas = 0
 predicoes = []
 probs_verd = []
+erros = []
 
 for idx, row in df_val.iterrows():
     text = row['texto_input']
@@ -82,6 +83,13 @@ for idx, row in df_val.iterrows():
             falsas_corretas += 1
         else:
             verdadeiras_corretas += 1
+    else:
+        tipo_erro = "Falsa prevista como Verdadeira (Falso Negativo)" if real_label == 0 else "Verdadeira prevista como Falsa (Falso Positivo)"
+        erros.append({
+            "titulo": row['titulo'][:50],
+            "tipo": tipo_erro,
+            "prob_verdadeira": probs[1]
+        })
 
 acc = (acertos / total_amostras) * 100
 prec_falsas = (falsas_corretas / total_falsas) * 100 if total_falsas > 0 else 0
@@ -97,3 +105,10 @@ print("-" * 60)
 print(f"Predições como 'Falsa':       {(np.array(predicoes) == 0).sum()}")
 print(f"Predições como 'Verdadeira': {(np.array(predicoes) == 1).sum()}")
 print(f"Média Probabilidade Verdadeira: {np.mean(probs_verd):.3f}")
+
+if erros:
+    print(f"\n⚠️ Detalhamento dos Erros ({len(erros)} notícias erradas):")
+    for i, e in enumerate(erros, 1):
+        print(f"  {i}. {e['titulo']}... -> {e['tipo']} (Prob[Verd]: {e['prob_verdadeira']:.2%})")
+else:
+    print("\n🎉 GABARITOU! 100% de acerto em todas as notícias!")
