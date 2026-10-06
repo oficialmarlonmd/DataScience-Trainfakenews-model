@@ -7,23 +7,40 @@ Como chamar o modelo hospedado no Hugging Face via Python / HTTP.
 """
 
 import os
-import requests
+from transformers import pipeline
 
-# Substitua pelo seu repo ou defina a variável HF_REPO_NAME
-REPO_NAME = os.getenv("HF_REPO_NAME", "seu-usuario/bertimbau-fakenews-detector-v4")
+REPO_NAME = os.getenv("HF_REPO_NAME", "oficialmarlon/bertimbau-fakenews-detector-v4")
 HF_TOKEN = os.getenv("HF_TOKEN", "")
 
-API_URL = f"https://router.huggingface.co/hf-inference/models/{REPO_NAME}"
-headers = {"Authorization": f"Bearer {HF_TOKEN}"} if HF_TOKEN else {}
+print(f"📡 Carregando modelo do Hugging Face: {REPO_NAME}")
 
-payload = {
-    "inputs": "URGENTE: Remédio caseiro milagroso cura câncer e médicos estão chocados! [SEP] Veja a receita secreta [SEP] Médicos tentam proibir a divulgação deste chá natural."
-}
+# Inicializa o pipeline direto do Hugging Face
+classifier = pipeline(
+    "text-classification",
+    model=REPO_NAME,
+    token=HF_TOKEN if HF_TOKEN else None
+)
 
-response = requests.post(API_URL, headers=headers, json=payload)
+def verificar_noticia(titulo, subtitulo="", texto=""):
+    entrada = f"{titulo} [SEP] {subtitulo} [SEP] {texto}".strip()
+    resultado = classifier(entrada)
+    return resultado[0]
 
-if response.status_code == 200:
-    print("Predição do Modelo no Hugging Face:")
-    print(response.json())
-else:
-    print(f"Status {response.status_code}:", response.text)
+# Teste 1: Notícia Falsa
+print("\n--- Teste 1: Notícia Falsa ---")
+res_fake = verificar_noticia(
+    titulo="URGENTE: Nova substância milagrosa cura todas as doenças em 24h!",
+    subtitulo="Médicos tentam esconder a receita secreta da população.",
+    texto="Compartilhe imediatamente antes que derrubem este artigo."
+)
+print("Resultado:", res_fake)
+
+# Teste 2: Notícia Verdadeira
+print("\n--- Teste 2: Notícia Verdadeira ---")
+res_true = verificar_noticia(
+    titulo="Banco Central mantém taxa básica de juros Selic em 10,50% ao ano",
+    subtitulo="Decisão foi unânime pelo Comitê de Política Monetária (Copom).",
+    texto="O Comitê de Política Monetária do Banco Central decidiu por unanimidade manter a taxa Selic."
+)
+print("Resultado:", res_true)
+
